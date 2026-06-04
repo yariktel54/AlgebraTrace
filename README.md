@@ -491,37 +491,3 @@ Contributions are welcome if they preserve the main constraints:
 
 When adding new solving rules, prefer small transparent transformations with clear `before`, `after`, and `explanation` fields.
 
----
-
-## License
-
-Recommended licensing model for a noncommercial public release:
-
-- **Software code**: PolyForm Noncommercial License 1.0.0.
-- **Documentation, examples, screenshots, and educational text**: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International.
-- **Commercial use**: available only under a separate written commercial license from the author.
-
-Important terminology note: a license that forbids commercial use is usually better described as **source-available noncommercial**, not OSI-approved open source.
-
-Suggested repository files:
-
-```text
-LICENSE
-LICENSE-DOCS.md
-NOTICE.md
-```
-
-Suggested README notice:
-
-```text
-This project is released for noncommercial educational and research use.
-The software code is licensed under the PolyForm Noncommercial License 1.0.0.
-Documentation and educational materials are licensed under CC BY-NC-SA 4.0.
-Commercial use, redistribution in commercial products, or paid service integration requires separate permission from the author.
-```
-
----
-
-## Author
-
-Created as an educational mathematics project focused on transparent symbolic reasoning, offline browser use, and step-by-step learning.
