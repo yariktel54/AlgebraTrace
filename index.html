@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AlgebraTrace</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body data-mode="user">
+<div class="app-shell">
+    <section class="hero">
+        <div class="brand-row">
+            <div class="brand">
+                <h1>AlgebraTrace</h1>
+                <p>Step-by-step math solver</p>
+            </div>
+        </div>
+        <div class="input-card">
+            <div class="input-row editor-row">
+                <div id="mathEditor" class="math-editor-host" aria-label="Mathematical input"></div>
+                <input id="inputText" class="solver-input-hidden" type="hidden" value="">
+                <button id="solveBtn" class="primary-button" type="button">Solve</button>
+            </div>
+            <div id="mathKeyboard"></div>
+            <div id="messageBox" class="toast"></div>
+        </div>
+    </section>
+
+    <section class="workspace">
+        <aside class="section-card">
+            <h2 class="section-title">Available actions</h2>
+            <div id="actionCards" class="actions-grid">
+                <p class="hint">Enter a math expression to see useful operations.</p>
+            </div>
+            <details class="options-card">
+                <summary>Point and bound options</summary>
+                <div class="option-grid">
+                    <label>x = a / limit point
+                        <input id="atInput" placeholder="value">
+                    </label>
+                    <label>Lower bound
+                        <input id="lowerInput" placeholder="lower value">
+                    </label>
+                    <label>Upper bound
+                        <input id="upperInput" placeholder="upper value">
+                    </label>
+                </div>
+            </details>
+        </aside>
+
+        <main class="result-host">
+            <div id="output" class="section-card empty-state">
+                <strong>Ready when you are.</strong>
+                Type a problem above and press Enter or Solve.
+            </div>
+            <section id="graphPanel" class="graph-card">
+                <div class="graph-head">
+                    <h3>Graph</h3>
+                    <div class="graph-tools">
+                        <button id="resetGraphBtn" class="secondary-button" type="button">Reset view</button>
+                    </div>
+                </div>
+                <canvas id="graphCanvas" width="900" height="360"></canvas>
+                <p id="graphNote" class="hint"></p>
+            </section>
+        </main>
+    </section>
+</div>
+<script src="js/ast.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/classifier.js"></script>
+<script src="js/actions.js"></script>
+<script src="js/strategy.js"></script>
+<script src="js/verifier.js"></script>
+<script src="js/ui/math_render.js"></script>
+<script src="js/ui/math_editor.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/solvers/algebra.js"></script>
+<script src="js/solvers/equations.js"></script>
+<script src="js/solvers/inequalities.js"></script>
+<script src="js/solvers/rational.js"></script>
+<script src="js/solvers/powers_roots.js"></script>
+<script src="js/solvers/logarithms.js"></script>
+<script src="js/solvers/trigonometry.js"></script>
+<script src="js/solvers/derivatives.js"></script>
+<script src="js/solvers/derivative_applications.js"></script>
+<script src="js/solvers/integrals.js"></script>
+<script src="js/solvers/systems.js"></script>
+<script src="js/solvers/function_properties.js"></script>
+<script src="js/solvers/limits_continuity.js"></script>
+<script src="js/compatibility_cases.js"></script>
+<script src="js/algebra_trace.js"></script>
+<script src="js/ui/graph.js"></script>
+<script src="js/ui/math_keyboard.js"></script>
+<script src="js/ui/app.js"></script>
+</body>
+</html>
