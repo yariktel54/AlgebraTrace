@@ -25,7 +25,7 @@ This version focuses on the final editor/UI architecture:
    The user-facing field is one editable mathematical field. The developer page can still show LaTeX source and solver export for debugging.
 
 3. **The design was rebuilt as a calculator-style interface.**
-   The new CSS avoids decorative gradients and AI-assistant styling. It uses neutral panels, clear borders, compact action cards, and large touch-friendly controls.
+   The new CSS uses neutral panels, clear borders, compact action cards, and large touch-friendly controls.
 
 4. **Mobile layout is supported from the start.**
    On narrow screens, input, keyboard, actions, result, and graph become a vertical mobile workflow. Keyboard buttons remain usable as touch targets.
@@ -502,8 +502,4 @@ The most important future extensions are:
 - optional mobile WebView packaging.
 
 ---
-
-## License
-
-Choose the license according to the intended release model. If the project must be open source but non-commercial, a standard OSI license such as MIT or Apache-2.0 is not enough because it allows commercial use. A Creative Commons NonCommercial license can restrict commercial reuse but is not recommended for software code. A practical option is a custom source-available non-commercial license, with a separate commercial license available by permission.
 
