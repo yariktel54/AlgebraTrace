@@ -23,6 +23,8 @@ window.AlgebraTrace = window.AlgebraTrace || {};
             combine_logarithms: "Combine logarithms",
             factor: "Factor",
             find_domain: "Find domain",
+            solve_with_parameters: "Solve with parameters",
+            analyze_parameters: "Analyze parameter cases",
             solve: "Solve",
             differentiate: "Find derivative",
             integrate: "Find integral",
@@ -62,6 +64,8 @@ window.AlgebraTrace = window.AlgebraTrace || {};
             combine_logarithms: "Combine same-base logarithms into one logarithm when possible.",
             factor: "Rewrite the expression as a product of factors.",
             find_domain: "Find values where the expression is defined.",
+            solve_with_parameters: "Solve in x while treating other letters as parameters.",
+            analyze_parameters: "Split the solution into parameter cases.",
             solve: "Find roots or solution intervals and show the steps.",
             differentiate: "Apply derivative rules step by step.",
             integrate: "Find an antiderivative and add the constant C.",
@@ -134,7 +138,13 @@ window.AlgebraTrace = window.AlgebraTrace || {};
             interval_solution: "Write the solution interval",
             direct_substitution: "Try direct substitution",
             factor_and_cancel: "Factor and cancel",
-            direct_substitution_after_cancellation: "Substitute after cancellation"
+            direct_substitution_after_cancellation: "Substitute after cancellation",
+            detect_main_variable_and_parameters: "Detect variable and parameters",
+            identify_parameterized_coefficients: "Identify parameter coefficients",
+            separate_linear_parameter_cases: "Split linear parameter cases",
+            compute_discriminant: "Compute the discriminant",
+            split_discriminant_cases: "Split discriminant cases",
+            split_parameter_sign_cases: "Split parameter sign cases"
         };
         if (map[rule]) return map[rule];
         return String(rule || "Step").replace(/_/g, " ").replace(/^./, function (c) { return c.toUpperCase(); });

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="260" viewBox="0 0 980 260" role="img" aria-labelledby="title desc">
+<title id="title">AlgebraTrace LaTeX input pipeline</title>
+<desc id="desc">LaTeX editor, solver export, action planner, solver core and rendered trace pipeline.</desc>
+<style>
+  text{font-family:Arial,Helvetica,sans-serif;fill:#17212f} .box{fill:#fff;stroke:#b8c2cf;stroke-width:2;rx:16}.soft{fill:#f6f7f9}.arrow{stroke:#2d6cdf;stroke-width:3;fill:none;marker-end:url(#m)} .label{font-size:18px;font-weight:700}.small{font-size:14px;fill:#687386}
+</style>
+<defs><marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2d6cdf"/></marker></defs>
+<rect width="980" height="260" fill="#f6f7f9"/>
+<rect class="box" x="30" y="70" width="170" height="110"/>
+<text class="label" x="115" y="112" text-anchor="middle">LaTeX editor</text>
+<text class="small" x="115" y="140" text-anchor="middle">\frac{}, \sqrt{}, \log_{}</text>
+<rect class="box" x="250" y="70" width="170" height="110"/>
+<text class="label" x="335" y="108" text-anchor="middle">Plain export</text>
+<text class="small" x="335" y="137" text-anchor="middle">solver-compatible</text>
+<text class="small" x="335" y="158" text-anchor="middle">x^2, sqrt(), log_2()</text>
+<rect class="box" x="470" y="70" width="170" height="110"/>
+<text class="label" x="555" y="112" text-anchor="middle">Planner</text>
+<text class="small" x="555" y="140" text-anchor="middle">actions + strategy scores</text>
+<rect class="box" x="690" y="70" width="120" height="110"/>
+<text class="label" x="750" y="112" text-anchor="middle">Native</text>
+<text class="small" x="750" y="140" text-anchor="middle">rule modules</text>
+<rect class="box" x="850" y="70" width="100" height="110"/>
+<text class="label" x="900" y="112" text-anchor="middle">Trace</text>
+<text class="small" x="900" y="140" text-anchor="middle">steps</text>
+<path class="arrow" d="M205 125 H245"/><path class="arrow" d="M425 125 H465"/><path class="arrow" d="M645 125 H685"/><path class="arrow" d="M815 125 H845"/>
+<text class="small" x="335" y="218" text-anchor="middle">The user-facing model stays LaTeX-first; the old plain syntax is only an internal export layer.</text>
+</svg>

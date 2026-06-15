@@ -1,60 +1,46 @@
 # AlgebraTrace
 
-**AlgebraTrace** is an offline, browser-based, step-by-step mathematics solver with a visual editable math field, a rule-based JavaScript solving core, clean educational traces, and an optional interactive graph.
+**AlgebraTrace** is an offline, browser-based, step-by-step mathematics solver with a LaTeX-first math editor, a rule-based JavaScript solving core, adaptive mobile UI, clean educational traces, and optional local graphing.
 
-It is designed for situations where a learner, teacher, or developer needs a transparent local math assistant that can run directly from `index.html` without a server, Node.js, CDN, internet connection, backend, or external API.
+It is designed for learners, teachers, and developers who need a transparent local math tool that opens directly from `index.html` and does not require a server, Node.js, CDN, internet connection, backend, database, or external API.
 
-AlgebraTrace is close in educational purpose to tools such as Photomath: it helps users see *how* a mathematical result is obtained, not only the final answer. The difference is that AlgebraTrace is built as a transparent offline web application with editable symbolic input and inspectable JavaScript rules, rather than as a camera-based mobile recognition service.
-
-> AlgebraTrace is not affiliated with Photomath or any similar commercial product.
+AlgebraTrace is similar in educational intent to tools such as Photomath, Desmos, Wolfram-style calculators, and GeoGebra: the interface should feel mathematical, not like a chat bot, and the answer should show how the result is obtained. AlgebraTrace is not affiliated with any of those products.
 
 ---
 
 ## Short description
 
-Offline step-by-step math solver with a unified visual math editor, rule-based JavaScript core, action cards, clean solution traces, and local canvas graphing. Runs directly from `index.html` with no server, CDN, Node.js, or backend.
+Offline LaTeX-first step-by-step math solver. Runs from local HTML/CSS/JavaScript files, renders a real editable math field, converts LaTeX to a solver-compatible internal format, chooses the best available rule strategy, and displays a student-readable solution trace.
 
 ---
 
-## Why AlgebraTrace exists
+## What changed in this version
 
-Most educational math tools fall into one of two extremes:
+This version focuses on the final editor/UI architecture:
 
-- static textbook examples that are easy to read but not interactive;
-- powerful CAS or AI tools that produce answers but often hide the exact transformation logic.
+1. **The input model is now LaTeX-first.**
+   The visible editor stores LaTeX-like source such as `\frac{x+1}{x-2}`, `\sqrt{x+5}`, `\log_{2}(16)`, `x^{2}`. The solver receives a separate normalized export such as `(x+1)/(x-2)`, `sqrt(x+5)`, `log_2(16)`, `x^2`.
 
-AlgebraTrace tries to occupy the middle ground. It is a lightweight educational solver where the path from input to answer is visible, structured, and suitable for teaching.
+2. **The old “plain input + rendered preview” model is removed from the public page.**
+   The user-facing field is one editable mathematical field. The developer page can still show LaTeX source and solver export for debugging.
 
-The project focuses on:
+3. **The design was rebuilt as a calculator-style interface.**
+   The new CSS avoids decorative gradients and AI-assistant styling. It uses neutral panels, clear borders, compact action cards, and large touch-friendly controls.
 
-- readable step-by-step explanations;
-- rule-based symbolic transformations;
-- offline use in a normal browser;
-- a clean student-facing interface;
-- compatibility with future APK/WebView packaging;
-- preservation of plain text solver input for testing, export, and debugging.
+4. **Mobile layout is supported from the start.**
+   On narrow screens, input, keyboard, actions, result, and graph become a vertical mobile workflow. Keyboard buttons remain usable as touch targets.
 
----
+5. **Parameterized school problems were added.**
+   The native solver now detects equations in `x` with other letters treated as parameters and supports common linear/quadratic parameter cases.
 
-## Main features
-
-- **Fully offline**: all logic is bundled as local HTML, CSS, and JavaScript.
-- **Runs from local files**: open `index.html` directly in a browser.
-- **No backend**: no server, API, Python runtime, database, CDN, or remote font.
-- **Unified visual math editor**: the editable input and rendered expression are one field, not a plain input plus a separate preview.
-- **Solver-compatible text model**: the pretty editor keeps an internal plain text expression used by the solver.
-- **Step-by-step output**: final answer plus readable transformation cards.
-- **Action detection**: the app suggests meaningful operations depending on the input.
-- **Native JavaScript solving layer**: implemented rule modules for algebra, equations, inequalities, logarithms, trigonometry, derivatives, integrals, limits, systems, rational expressions, and function analysis.
-- **Compatibility fallback**: legacy case data can still be used as a safety net when a native rule is not available.
-- **Canvas graphing**: local interactive graph with zoom, pan, axes, grid, and discontinuity-aware plotting.
-- **APK/WebView-ready architecture**: the app can later be packaged as a local WebView application.
+6. **README was expanded with the solver pipeline and strategy-selection explanation.**
+   The diagrams below are local SVG files and work offline in the repository.
 
 ---
 
 ## Quick start
 
-Clone or download the repository and open:
+Download or clone the folder and open:
 
 ```text
 index.html
@@ -62,7 +48,7 @@ index.html
 
 No build step is required.
 
-You do not need:
+You do **not** need:
 
 ```text
 npm install
@@ -71,6 +57,7 @@ python
 server
 internet
 CDN
+backend
 ```
 
 The app is intended to work directly as:
@@ -79,109 +66,230 @@ The app is intended to work directly as:
 file:///.../index.html
 ```
 
----
-
-## Example inputs
+For diagnostics and rule details, open:
 
 ```text
-x^2 - 5*x + 6 = 0
-(3*x + 12)/(x^2 - 16)
-log_2(16)
-log(16, 2)
-log_2(x - 3)
-d/dx sin(x^2)
-integrate 2*x + 1
-limit((x^2 - 4)/(x - 2), x, 2)
-2*x + y = 5; x - y = 1
+dev.html
 ```
 
-Useful syntax:
+For the browser test runner, open:
 
 ```text
-*          multiplication
-^          power
-sqrt()     square root
-|x - 3|    absolute value
-sin()      sine
-cos()      cosine
-tan()      tangent
-ln()       natural logarithm
-log_2()    logarithm with explicit base
-log2()     compact base-2 logarithm
-log(a, b)  logarithm of a with base b
-;          equation separator for systems
-pi or π    pi
+tests/test_all.html
 ```
 
----
-
-## User interface
-
-The public interface is intentionally simple:
-
-1. Type or insert a mathematical expression in the visual math editor.
-2. Press **Enter** or **Solve**.
-3. AlgebraTrace detects available actions.
-4. The most suitable default action runs automatically.
-5. Action cards remain available so another operation can be selected.
-6. The app shows a final answer and a clean step-by-step trace.
-7. A graph appears only when it is useful for the selected operation.
-
-The user-facing page does not expose internal rule IDs, raw JSON, solver source markers, candidate strategies, or debug diagnostics.
+Current validation target: **111 / 111 tests passing**, including **Final UI tests 12 / 12**, LaTeX pipeline, parameterized problems, step quality checks, and the school-math solver coverage tests.
 
 ---
 
-## Unified visual math editor
+## Input syntax
 
-AlgebraTrace uses a custom lightweight editor instead of a separate text field and rendered preview.
+The user-facing editor accepts LaTeX-style input. The math keyboard inserts the same LaTeX source.
 
-The visible editor supports:
+| Mathematical idea | LaTeX-first input | Internal solver export |
+|---|---:|---:|
+| Fraction | `\frac{3x+12}{x^2-16}` | `(3x+12)/(x^2-16)` |
+| Square root | `\sqrt{x+5}` | `sqrt(x+5)` |
+| Power | `x^{2}` | `x^2` |
+| Logarithm with base | `\log_{2}(16)` | `log_2(16)` |
+| Natural logarithm | `\ln(x)` | `ln(x)` |
+| Trigonometric function | `\sin(x^2)` | `sin(x^2)` |
+| Derivative request | `\frac{d}{dx}\sin(x^2)` | `d/dxsin(x^2)` |
+| System separator | `2x+y=5; x-y=1` | `2x+y=5; x-y=1` |
+| Parameter equation | `ax+b=0` or `a\cdot x+b=0` | `ax+b=0` or `a*x+b=0` |
 
-- normal typing;
-- caret movement;
-- click/tap caret placement;
-- Backspace/Delete;
-- paste as plain solver text;
-- powers such as `x^2`, `(x+1)^2`, `sin(x)^2`, and `x^(n+1)`;
-- fractions;
-- square roots;
-- absolute values;
-- functions;
-- relations and systems;
-- insertion from the on-screen math keyboard.
+The old plain syntax is still accepted in many places, especially in tests and developer utilities, but it is no longer the public UI model.
 
-Internally, the editor preserves plain solver-compatible text. This keeps the mathematical core testable and avoids locking the project into a heavy external math editor dependency.
+---
 
-Public editor helpers:
+## Architecture overview
+
+![LaTeX input pipeline](docs/latex-pipeline.svg)
+
+AlgebraTrace separates the **display model** from the **solver model**:
+
+```text
+Visible editor source:     \frac{3x+12}{x^2-16}
+Solver export:             (3x+12)/(x^2-16)
+Native solver result:      3/(x - 4), where x ≠ -4 and x ≠ 4
+Rendered trace:            formatted fractions, powers, restrictions, and steps
+```
+
+This separation is important. A beautiful editor should not force the solving core to parse browser DOM. The solver should receive deterministic text that can be tested, saved, compared, and used without the UI.
+
+The main pipeline is:
+
+1. **LaTeX editor** stores the visible mathematical source.
+2. **LaTeX renderer** draws fractions, roots, powers, subscripts, functions, and relations in the editable field.
+3. **LaTeX-to-plain exporter** converts the same source into solver-compatible text.
+4. **Classifier** identifies the task type: equation, rational expression, logarithm, derivative request, system, parameterized equation, etc.
+5. **Action detector** proposes operations that make sense for the input.
+6. **Strategy planner** builds candidate solving strategies and scores them.
+7. **Native rule module** runs the best implemented strategy.
+8. **Step validator** removes fake or non-transforming steps.
+9. **Renderer** displays the final answer and readable transformation cards.
+
+---
+
+## How the editor works
+
+The editor is intentionally lightweight and offline. It is not MathJax, KaTeX, MathQuill, a CDN widget, or a server-rendered component.
+
+Main files:
+
+```text
+js/ui/math_editor.js      editable LaTeX field, caret, paste, keyboard insertion
+js/ui/math_render.js      LaTeX rendering + LaTeX/plain conversion
+js/ui/math_keyboard.js    on-screen LaTeX keyboard
+css/app.css              responsive calculator-style UI
+```
+
+The editor keeps one source string:
 
 ```js
-getMathEditorValue();
-setMathEditorValue("x^2 - 5*x + 6 = 0");
-insertIntoMathEditor("sqrt()", 5);
+latex = "\\frac{3x+12}{x^2-16}";
 ```
 
+The solving layer receives:
+
+```js
+latexToPlain(latex) === "(3x+12)/(x^2-16)";
+```
+
+The public helper methods are:
+
+```js
+getMathEditorValue();          // solver-compatible plain text
+getMathEditorLatex();          // LaTeX source
+setMathEditorValue("x^2=4");  // accepts plain text or LaTeX-like text
+insertIntoMathEditor("\\sqrt{}", 6);
+```
+
+The important design choice is that the editable field is not a separate plain input plus a preview. The visual field is the editing field.
+
 ---
 
-## Math keyboard
+## How the best solution is selected
 
-The on-screen keyboard inserts solver-compatible text while showing visual mathematical buttons.
+![Strategy selection](docs/strategy-selection.svg)
 
-It includes groups for:
+AlgebraTrace does not ask a language model to invent a solution. It uses deterministic rule modules. The process is closer to a small educational CAS/planner.
 
-- basic operators and relations;
-- structural templates such as fractions, powers, roots, and absolute values;
-- functions such as trigonometric and logarithmic expressions;
-- calculus templates for derivatives, integrals, and limits.
+### 1. Classification
 
-The keyboard is an input tool, not an examples panel.
+The classifier reads the normalized solver export and assigns a task type:
 
----
+```text
+x^2-5x+6=0              → quadratic_equation
+(3x+12)/(x^2-16)        → rational_expression
+\log_{2}(16) export      → logarithmic_expression
+d/dxsin(x^2)            → derivative_request
+a*x+b=0                 → parameterized_linear_equation
+a*x^2+b*x+c=0           → parameterized_quadratic_equation
+```
 
-## Step-by-step philosophy
+The task profile also records features such as:
 
-AlgebraTrace is designed to avoid fake or placeholder steps.
+```js
+{
+  problem_kind: "relation",
+  main_variable: "x",
+  is_rational: true,
+  has_logarithms: false,
+  has_radicals: false,
+  has_parameters: true,
+  domain: "real"
+}
+```
 
-A useful step should show a real mathematical transformation:
+### 2. Action detection
+
+The action detector decides what operations should be shown to the user. For example:
+
+```text
+x^2-5x+6=0
+→ solve, graph
+
+(3x+12)/(x^2-16)
+→ simplify, find_domain, differentiate, find_asymptotes, find_discontinuities, graph
+
+a*x+b=0
+→ solve_with_parameters, analyze_parameters, solve, graph
+```
+
+This keeps the UI from offering irrelevant actions. A quadratic equation should not primarily show “simplify”; it should show “solve”.
+
+### 3. Candidate strategy generation
+
+Each action can have multiple possible strategies. A quadratic equation may be solvable by factoring or by the quadratic formula. A rational expression may be simplified by factoring and canceling. A parameterized quadratic requires cases.
+
+Examples:
+
+```js
+planStrategies("x^2-5*x+6=0", "solve", "quadratic_equation")
+→ [
+  { id: "quadratic_factorization", score: 100 },
+  { id: "quadratic_formula", score: 70 }
+]
+```
+
+```js
+planStrategies("a*x^2+b*x+c=0", "solve_with_parameters", "parameterized_quadratic_equation")
+→ [
+  { id: "parameterized_quadratic_discriminant_cases", score: 100 }
+]
+```
+
+The strategy with the highest score is selected unless the native module reports that the pattern is unsupported.
+
+### 4. Native-first execution
+
+The native solver modules are tried before compatibility records. The current native modules are organized by topic:
+
+```text
+js/solvers/algebra.js
+js/solvers/equations.js
+js/solvers/inequalities.js
+js/solvers/rational.js
+js/solvers/powers_roots.js
+js/solvers/logarithms.js
+js/solvers/trigonometry.js
+js/solvers/derivatives.js
+js/solvers/derivative_applications.js
+js/solvers/integrals.js
+js/solvers/systems.js
+js/solvers/function_properties.js
+js/solvers/limits_continuity.js
+js/solvers/parameters.js
+```
+
+The dispatcher works approximately as:
+
+```js
+if (hasParameters && action is solve/analyze_parameters) {
+    use parameter solver;
+}
+else if (hasLogarithms && action is logarithm-related) {
+    use logarithm solver;
+}
+else if (action === "find_domain") {
+    use rational/domain solver;
+}
+else if (action === "solve") {
+    use equation/inequality solver;
+}
+else if (action === "differentiate") {
+    use derivative solver;
+}
+...
+else {
+    return unsupported result;
+}
+```
+
+### 5. Step construction
+
+A step is expected to be educational, not just diagnostic. A good step has:
 
 ```js
 {
@@ -190,304 +298,212 @@ A useful step should show a real mathematical transformation:
   action: "Factor as a difference of squares",
   before: "x^2 - 16",
   after: "(x - 4)*(x + 4)",
-  explanation: "The expression has the form a^2 - b^2, so it becomes (a - b)(a + b)."
+  explanation: "The expression has the form a^2 - b^2."
 }
 ```
 
-Bad educational traces such as the following should not appear in the normal user interface:
+Bad placeholder steps are filtered out. A step should not merely say:
 
 ```text
-Apply derivative_power_rule
+Apply rule_x
 Native JavaScript rule-based transformation.
 ```
 
-The goal is not only to calculate, but to produce a trace that can be read by a student or used by a teacher.
+unless there is also a real mathematical before/after transformation or a valid reasoning/domain step.
+
+### 6. Verification and fallback
+
+Native results include a verification object. For equations this can include substitution checks; for integrals, differentiation of the antiderivative; for rational simplification, domain preservation. Compatibility records are only a safety net for legacy examples, not the primary solution path.
 
 ---
 
-## Supported areas
+## Parameterized problems
 
-Current native JavaScript rule modules cover implemented patterns in:
+The parameter module treats `x` as the main unknown and other letters as parameters.
 
-- arithmetic expressions;
-- algebraic simplification;
-- polynomial factorization;
-- common factor extraction;
-- difference of squares;
-- perfect square trinomials;
-- rational expressions;
-- domain restrictions;
-- linear and quadratic equations;
-- linear and quadratic inequalities;
-- rational equations and inequalities;
-- absolute value equations and inequalities;
-- powers and roots;
-- radical equations;
-- exponential equations;
-- logarithmic expressions, equations, inequalities, expansion, combination, and domains;
-- trigonometric identities, equations, substitutions, and simple inequalities;
-- derivatives;
-- derivative applications;
-- basic integrals;
-- limits and continuity checks;
-- simple systems;
-- function properties such as extrema, monotonicity, range, inverse, asymptotes, and discontinuities;
-- graphing of common browser-evaluable expressions.
+### Linear parameter equation
 
-AlgebraTrace is a progressive educational symbolic solver, not a full general-purpose CAS.
+Input:
+
+```text
+a*x+b=0
+```
+
+Result structure:
+
+```text
+if a ≠ 0: x = -b/a;
+if a = 0 and b = 0: every real x;
+if a = 0 and b ≠ 0: no solution
+```
+
+The solver explicitly splits the degenerate case where the coefficient of `x` becomes zero.
+
+### Quadratic parameter equation
+
+Input:
+
+```text
+a*x^2+b*x+c=0
+```
+
+Result structure:
+
+```text
+if a ≠ 0 and D > 0: two real roots;
+if a ≠ 0 and D = 0: one double root;
+if a ≠ 0 and D < 0: no real roots;
+where D = b^2 - 4ac;
+if a = 0: reduce to the linear parameter case.
+```
+
+### Square equals parameter
+
+Input:
+
+```text
+x^2-a=0
+```
+
+Result structure:
+
+```text
+if a > 0: x = -sqrt(a) or x = sqrt(a);
+if a = 0: x = 0;
+if a < 0: no real solution.
+```
+
+These are the most common school-level parameter cases. More complex parameter inequalities and mixed systems can be added by extending `js/solvers/parameters.js` with additional case analyzers.
 
 ---
 
-## Logarithm support
+## School-program coverage checklist
 
-The logarithm layer supports several input forms:
+The current implementation is aimed at broad secondary-school coverage, with the important limitation that AlgebraTrace is a rule-based educational solver, not a full CAS. It supports implemented patterns in each topic; it does not claim universal symbolic completeness.
 
-```text
-log_2(16)
-log2(16)
-log(16, 2)
-ln(x)
-log(x)
-log_10(x)
-log10(x)
-log(x, 1/2)
-log_0.5(x)
-```
-
-The custom-base convention is:
-
-```text
-log(argument, base)
-```
-
-Therefore:
-
-```text
-log(16, 2) means log base 2 of 16
-log(3, 4)  means log base 4 of 3
-```
-
-Implemented patterns include:
-
-```text
-log_2(16) = 4
-log_2(1) = 0
-log_2(2) = 1
-log_10(1000) = 3
-ln(e) = 1
-log_a(a^x) = x
-a^(log_a(x)) = x
-ln(e^x) = x
-e^(ln(x)) = x
-```
-
-The solver also includes actions for logarithm expansion, combination, domain restrictions, logarithmic equations, and selected logarithmic inequalities.
+| Area | Status | Notes |
+|---|---:|---|
+| Arithmetic expressions | Supported | Order of operations, exact/simple numeric output. |
+| Linear equations | Supported | Numeric and parameterized cases. |
+| Quadratic equations | Supported | Factoring, square cases, parameterized discriminant cases. |
+| Linear inequalities | Supported | Sign/interval output for implemented patterns. |
+| Quadratic inequalities | Supported | Sign chart for implemented polynomial patterns. |
+| Rational expressions | Supported | Simplification, cancellation, forbidden values. |
+| Rational equations/inequalities | Supported | Denominator restrictions and sign charts for implemented cases. |
+| Absolute value equations/inequalities | Supported | Standard split/interval cases. |
+| Powers and roots | Supported | Roots, square roots, simple radical equations. |
+| Exponential equations | Supported | Same-base and logarithmic answer patterns. |
+| Logarithms | Supported | Numeric simplification, domain, expansion/combination, simple equations. |
+| Trigonometry | Partly supported | Basic identities and simple relations; full general trigonometric solving is not complete. |
+| Systems of equations | Supported | Linear 2×2 systems and selected simple systems. |
+| Functions and graphs | Supported | Local canvas graphing, domain, range/asymptote patterns, function analysis. |
+| Derivatives | Supported | Rule-based derivatives and applications. |
+| Integrals | Partly supported | Basic antiderivatives and selected definite/area tasks. |
+| Limits and continuity | Supported for common patterns | Direct substitution, removable discontinuities, infinity behavior patterns. |
+| Parameterized problems | Newly supported | Common linear/quadratic school cases. |
 
 ---
 
-## Interactive graph
+## UI principles
 
-The graph is implemented with a local `<canvas>` and does not depend on external plotting libraries.
+The UI is intentionally closer to a calculator than to a chat product:
 
-It supports:
+- no decorative gradient background;
+- no “AI assistant” framing;
+- no conversational prompt chrome;
+- one dominant math editor;
+- clear action cards;
+- result-first solution layout;
+- developer details only in `dev.html`;
+- responsive mobile stack;
+- touch-friendly keyboard buttons.
 
-- responsive sizing;
-- grid and axes;
-- tick labels;
-- pan by dragging;
-- zoom with wheel or touch gestures;
-- reset view;
-- redraw on resize;
-- line breaking near discontinuities or asymptotes;
-- explicit expressions and simple equations transformed into `left - right`.
+The public page hides raw JSON, internal strategy IDs, and compatibility-source markers. The developer page keeps them visible.
 
-Public graph helpers:
+---
+
+## File structure
+
+```text
+index.html                     user-facing app
+dev.html                       developer/debug app
+css/app.css                    design system and responsive layout
+js/ui/math_editor.js           LaTeX-first editable field
+js/ui/math_render.js           LaTeX renderer and converter
+js/ui/math_keyboard.js         on-screen math keyboard
+js/ui/app.js                   UI orchestration
+js/ui/graph.js                 local canvas graphing
+js/algebra_trace.js            public solve/listActions API and dispatcher
+js/actions.js                  action detection
+js/classifier.js               task classification
+js/strategy.js                 strategy planning/scoring
+js/renderer.js                 solution HTML renderer
+js/solvers/*.js                native rule modules
+tests/test_all.html            local browser test runner
+docs/*.svg                     local architecture diagrams
+```
+
+---
+
+## Public API
+
+The stable high-level API remains:
 
 ```js
-AlgebraTrace.initGraph(canvas, options);
-AlgebraTrace.plotExpression(canvas, expression, analysis);
-AlgebraTrace.resetGraphView(canvas);
-AlgebraTrace.screenToMath(state, canvas, px, py);
-AlgebraTrace.mathToScreen(state, canvas, x, y);
+solve(input, options)
+listActions(input)
+renderSolution(result)
 ```
 
----
-
-## Public JavaScript API
-
-The main API is intentionally small:
+Examples:
 
 ```js
-const result = solve("(3*x + 12)/(x^2 - 16)", {
-  action: "simplify"
-});
-
-const actions = listActions("x^2 - 5*x + 6 = 0");
-const html = renderSolution(result);
-const defaultAction = getDefaultAction("integrate 2*x + 1");
+solve("x^2 - 5*x + 6 = 0")
+solve("(3*x + 12)/(x^2 - 16)", { action: "simplify" })
+solve("a*x+b=0", { action: "solve_with_parameters" })
+listActions("a*x^2+b*x+c=0")
 ```
 
-Typical result shape:
+Editor helpers:
 
 ```js
-{
-  input: "...",
-  task_type: "...",
-  problem_profile: { /* ... */ },
-  available_actions: [ /* ... */ ],
-  selected_action: "...",
-  candidate_strategies: [ /* ... */ ],
-  selected_strategy: "...",
-  source: "native",
-  steps: [ /* ... */ ],
-  verification: { /* ... */ },
-  answer: "..."
-}
-```
-
-`renderSolution(result, { developer: false })` produces clean user-facing output.
-
-`renderSolution(result, { developer: true })` can expose technical details for debugging.
-
----
-
-## Project structure
-
-Current browser distribution:
-
-```text
-index.html
-README.md
-css/
-  app.css
-js/
-  algebra_trace.js
-  ast.js
-  parser.js
-  renderer.js
-  classifier.js
-  actions.js
-  strategy.js
-  verifier.js
-  compatibility_cases.js
-  solvers/
-    algebra.js
-    equations.js
-    inequalities.js
-    rational.js
-    powers_roots.js
-    logarithms.js
-    trigonometry.js
-    derivatives.js
-    derivative_applications.js
-    integrals.js
-    systems.js
-    function_properties.js
-    limits_continuity.js
-  ui/
-    app.js
-    examples.js
-    graph.js
-    math_editor.js
-    math_keyboard.js
-    math_render.js
-```
-
-If a developer/debug page and browser test runner are included in the repository, they can be placed as:
-
-```text
-dev.html
-tests/
-  test_all.html
+getMathEditorValue();
+getMathEditorLatex();
+setMathEditorValue("\\frac{x+1}{x-2}");
+insertIntoMathEditor("\\sqrt{}", 6);
 ```
 
 ---
 
-## Architecture
+## Development notes
 
-AlgebraTrace is organized as a small browser-native system:
-
-```text
-Input editor
-  ↓
-Plain solver-compatible text
-  ↓
-Parser / classifier / action detector
-  ↓
-Strategy planner
-  ↓
-Native rule-based solver modules
-  ↓
-Verification / compatibility fallback
-  ↓
-Readable renderer
-  ↓
-Step cards + final answer + optional graph
-```
-
-The most important design decision is that the visual editor does not replace the symbolic input model. It only makes the input easier to read and edit while preserving the plain text expression needed by the solver.
+- Keep the app offline and local-file friendly.
+- Do not add CDN dependencies.
+- Do not require Node.js for normal use.
+- Preserve `solve(input, options)`, `listActions(input)`, and `renderSolution(result)`.
+- When adding a new solver rule, add meaningful `before` and `after` fields.
+- Avoid compressed one-step explanations when an educational trace needs intermediate transformations.
+- Prefer native rule modules over compatibility records.
+- For school tasks with parameters, always split degenerate cases explicitly.
 
 ---
 
-## Current limitations
+## Limitations
 
-AlgebraTrace is not a complete CAS. Known limitations include:
+AlgebraTrace is still a rule-based educational solver. It is not a complete CAS. Unsupported expressions should return a clear “operation unavailable” message rather than a fake solution. This is intentional: transparent partial coverage is better than unreliable symbolic output.
 
-- no full symbolic simplifier for arbitrary nested expressions;
-- limited exact formatting for advanced irrational or transcendental answers;
-- limited nonlinear systems;
-- conservative graphing for complex expressions;
-- no full complex-number solver;
-- no complete general trigonometric transformation engine;
-- limited polynomial and rational manipulation beyond implemented rule patterns;
-- custom HTML math rendering rather than a full TeX engine.
+The most important future extensions are:
 
-These limitations are intentional at this stage. The project favors transparent implemented rules over opaque broad claims.
+- richer parameter inequalities;
+- more complete trigonometric equation families;
+- broader symbolic factoring;
+- more robust multi-variable systems;
+- selection editing inside the LaTeX field;
+- optional mobile WebView packaging.
 
 ---
 
-## Roadmap
+## License
 
-Possible next steps:
-
-- expand native symbolic coverage without relying on compatibility fallback;
-- add more verified transformation rules;
-- improve exact output formatting;
-- add a full developer test page to the public repository;
-- add saved examples as optional documentation, not as clutter in the main UI;
-- prepare a WebView/APK wrapper;
-- add localization for educational use;
-- improve accessibility of the visual editor and graph.
-
----
-
-## Relationship to Photomath-like tools
-
-AlgebraTrace can be described as a small offline educational alternative in the same broad category of step-by-step math assistance.
-
-However, the focus is different:
-
-- AlgebraTrace does not scan handwritten or printed math from a camera.
-- AlgebraTrace does not depend on cloud recognition or a remote solver.
-- AlgebraTrace exposes a local JavaScript rule-based core.
-- AlgebraTrace is designed to be inspectable, modifiable, and packageable as a local educational app.
-
-In short: Photomath-like educational outcome, but with a transparent offline browser architecture.
-
----
-
-## Contributing
-
-Contributions are welcome if they preserve the main constraints:
-
-- no required server for normal use;
-- no CDN or internet dependency;
-- no Node.js requirement for normal use;
-- no backend solver dependency;
-- readable educational steps;
-- no fake placeholder transformations;
-- preservation of the public API: `solve`, `listActions`, `renderSolution`;
-- preservation of solver-compatible plain text input.
-
-When adding new solving rules, prefer small transparent transformations with clear `before`, `after`, and `explanation` fields.
+Choose the license according to the intended release model. If the project must be open source but non-commercial, a standard OSI license such as MIT or Apache-2.0 is not enough because it allows commercial use. A Creative Commons NonCommercial license can restrict commercial reuse but is not recommended for software code. A practical option is a custom source-available non-commercial license, with a separate commercial license available by permission.
 

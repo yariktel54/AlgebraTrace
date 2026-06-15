@@ -5,6 +5,10 @@ window.AlgebraTrace = window.AlgebraTrace || {};
 
     function planStrategies(input, action, taskType) {
         var list = [];
+        if ((action === "solve_with_parameters" || action === "analyze_parameters") || /^parameterized_/.test(taskType || "")) {
+            if ((taskType || "").indexOf("quadratic") >= 0) list.push({ id: "parameterized_quadratic_discriminant_cases", score: 100, reason: "split by leading coefficient and discriminant" });
+            else list.push({ id: "parameterized_linear_equation_cases", score: 100, reason: "split by whether the coefficient of x is zero" });
+        }
         if (action === "simplify" && taskType === "rational_expression") {
             list.push({ id: "rational_expression_factor_cancel", score: 100, reason: "rational expression can be factored and reduced" });
         }

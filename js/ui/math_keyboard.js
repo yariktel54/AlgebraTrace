@@ -5,26 +5,33 @@ window.AlgebraTrace = window.AlgebraTrace || {};
     function $(id) { return document.getElementById(id); }
 
     var groups = [
-        { title:"Basic operators", columns:4, keys:[
-            { label:"+", insert:"+" }, { label:"−", insert:"-" }, { label:"×", insert:"*" }, { label:"÷", insert:"/" },
-            { label:"=", insert:"=" }, { label:"<", insert:"<" }, { label:">", insert:">" }, { label:"≤", insert:"<=" },
-            { label:"≥", insert:">=" }, { label:"(", insert:"(" }, { label:")", insert:")" }, { label:"^", insert:"^" },
-            { label:"x", insert:"x" }, { label:"y", insert:"y" }, { label:"π", insert:"pi" }, { label:";", insert:"; " }
+        { title:"Numbers", columns:5, keys:[
+            { label:"7", insert:"7" }, { label:"8", insert:"8" }, { label:"9", insert:"9" }, { label:"(", insert:"(" }, { label:")", insert:")" },
+            { label:"4", insert:"4" }, { label:"5", insert:"5" }, { label:"6", insert:"6" }, { label:"x", insert:"x" }, { label:"a", insert:"a" },
+            { label:"1", insert:"1" }, { label:"2", insert:"2" }, { label:"3", insert:"3" }, { label:"b", insert:"b" }, { label:"c", insert:"c" },
+            { label:"0", insert:"0" }, { label:".", insert:"." }, { label:"π", insert:"\\pi " }, { label:";", insert:"; " }, { label:",", insert:", " }
+        ]},
+        { title:"Operations", columns:4, keys:[
+            { label:"+", insert:"+" }, { label:"−", insert:"-" }, { label:"×", insert:"\\cdot " }, { label:"÷", insert:"/" },
+            { label:"=", insert:"=" }, { label:"<", insert:"<" }, { label:">", insert:">" }, { label:"≤", insert:"\\le " },
+            { label:"≥", insert:"\\ge " }, { label:"≠", insert:"\\ne " }, { label:"±", insert:"\\pm " }, { label:"∞", insert:"\\infty " }
         ]},
         { title:"Structure", columns:4, keys:[
-            { labelHTML:'<span class="key-frac"><span>□</span><span></span><span>□</span></span>', aria:"fraction template", insert:"()/()", cursor:1, kind:"template" },
-            { labelHTML:'<span class="key-power">a<sup>□</sup></span>', aria:"power template", insert:"^()", cursor:2, kind:"template" },
-            { labelHTML:'<span class="key-root">√□</span>', aria:"square root template", insert:"sqrt()", cursor:5, kind:"template" },
-            { labelHTML:'<span class="key-abs">|□|</span>', aria:"absolute value template", insert:"||", cursor:1, kind:"template" },
-            { labelHTML:'<span class="key-system">x=1&nbsp;;&nbsp;y=2</span>', aria:"system separator", insert:"; ", cursor:2, kind:"template wide" }
+            { labelHTML:'<span class="key-frac"><span>□</span><span></span><span>□</span></span>', aria:"fraction", insert:"\\frac{}{}", cursor:6, kind:"template" },
+            { labelHTML:'<span class="key-power">a<sup>□</sup></span>', aria:"power", insert:"^{}", cursor:2, kind:"template" },
+            { labelHTML:'<span class="key-root">√□</span>', aria:"square root", insert:"\\sqrt{}", cursor:6, kind:"template" },
+            { labelHTML:'<span class="key-abs">|□|</span>', aria:"absolute value", insert:"\\left|\\right|", cursor:6, kind:"template" },
+            { labelHTML:'<span class="key-system">system ;</span>', aria:"system separator", insert:"; ", cursor:2, kind:"template wide" },
+            { labelHTML:'D', aria:"discriminant", insert:"D=b^2-4\\cdot a\\cdot c", kind:"template wide" }
         ]},
         { title:"Functions", columns:4, keys:[
-            { label:"sin", insert:"sin()", cursor:4 }, { label:"cos", insert:"cos()", cursor:4 }, { label:"tan", insert:"tan()", cursor:4 }, { labelHTML:'ln(□)', aria:"natural logarithm", insert:"ln()", cursor:3 },
-            { labelHTML:'log<sub>2</sub>(□)', aria:"log base two", insert:"log_2()", cursor:6 }, { labelHTML:'log(□)', aria:"common logarithm", insert:"log()", cursor:4 },
-            { labelHTML:'log<sub>a</sub>(□)', aria:"custom-base logarithm: log(argument, base)", insert:"log(, )", cursor:4 }, { label:"exp", insert:"exp()", cursor:4 }
+            { label:"sin", insert:"\\sin()", cursor:5 }, { label:"cos", insert:"\\cos()", cursor:5 }, { label:"tan", insert:"\\tan()", cursor:5 }, { label:"ln", insert:"\\ln()", cursor:4 },
+            { labelHTML:'log<sub>2</sub>', aria:"log base 2", insert:"\\log_{2}()", cursor:9 },
+            { labelHTML:'log<sub>a</sub>', aria:"log base a", insert:"\\log_{}()", cursor:6 },
+            { label:"exp", insert:"\\exp()", cursor:5 }, { labelHTML:'x<sup>2</sup>', aria:"square", insert:"^{2}", cursor:4 }
         ]},
         { title:"Calculus", columns:3, keys:[
-            { labelHTML:'<span class="key-derivative">d/dx</span>', aria:"derivative", insert:"d/dx ", cursor:5, kind:"wide" },
+            { labelHTML:'<span class="key-derivative">d/dx</span>', aria:"derivative", insert:"\\frac{d}{dx} ", cursor:13, kind:"wide" },
             { labelHTML:'<span class="key-integral">∫</span>', aria:"integral", insert:"integrate ", cursor:10, kind:"wide" },
             { labelHTML:'<span class="key-limit">lim</span>', aria:"limit", insert:"limit(, x, )", cursor:6, kind:"wide" }
         ]}
@@ -45,9 +52,7 @@ window.AlgebraTrace = window.AlgebraTrace || {};
             input.dispatchEvent(new Event("input", { bubbles:true }));
             return;
         }
-        var before = input.value.slice(0, start);
-        var after = input.value.slice(end);
-        input.value = before + text + after;
+        input.value = input.value.slice(0, start) + text + input.value.slice(end);
         var caret = start + (typeof cursorOffset === "number" ? cursorOffset : text.length);
         input.focus();
         input.setSelectionRange(caret, caret);
@@ -65,7 +70,6 @@ window.AlgebraTrace = window.AlgebraTrace || {};
         if (typeof key.cursor === "number") button.setAttribute("data-cursor", String(key.cursor));
         return button;
     }
-
     function findKeyButton(node, root) {
         while (node && node !== root) {
             if (node.getAttribute && node.getAttribute("data-insert")) return node;

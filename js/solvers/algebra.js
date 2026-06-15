@@ -1102,7 +1102,9 @@ window.AlgebraTrace = window.AlgebraTrace || {};
         }
         var out = null;
         var hasLog = /\b(?:log\d*|log_|log\(|ln\()/i.test(String(input || ""));
-        if (hasLog && (action === "simplify" || action === "find_domain" || action === "expand_logarithm" || action === "combine_logarithms")) out = callSolver("logarithms", "solveLogExpression", [input, action]);
+        var hasParam = NS.nativeSolvers.parameters && NS.nativeSolvers.parameters.hasParameter ? NS.nativeSolvers.parameters.hasParameter(input) : false;
+        if (hasParam && !hasLog && !/\b(?:sqrt|sin|cos|tan|ln|exp)\s*\(/i.test(String(input || "")) && (action === "solve" || action === "solve_with_parameters" || action === "analyze_parameters")) out = callSolver("parameters", "solveParameterized", [input, action === "solve" ? "solve_with_parameters" : action]);
+        if (!out && hasLog && (action === "simplify" || action === "find_domain" || action === "expand_logarithm" || action === "combine_logarithms")) out = callSolver("logarithms", "solveLogExpression", [input, action]);
         if (action === "find_domain" && !out) out = rationalDomain(input);
         if (!out && (action === "simplify" || action === "factor" || action === "find_domain")) out = callSolver("powersRoots", "solvePowerRootExpression", [input]) || solveSimplifyOrFactor(input, action);
         if (!out && action === "solve") out = callSolver("equations", "solveEquationOrInequality", [input]);

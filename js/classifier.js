@@ -10,6 +10,13 @@ window.AlgebraTrace = window.AlgebraTrace || {};
         return false;
     }
 
+    function hasParameter(text) {
+        var s = String(text || "").replace(/sin|cos|tan|cot|ctg|sec|csc|log|ln|sqrt|exp|limit|integrate|infinity|pi|dx|d\//ig, "");
+        var ids = s.match(/[A-Za-z]+/g) || [];
+        for (var i = 0; i < ids.length; i += 1) if (ids[i].toLowerCase() !== "x") return true;
+        return false;
+    }
+
     function classify(input) {
         var text = String(input || "").trim();
         var compact = text.replace(/\s+/g, "");
@@ -26,6 +33,7 @@ window.AlgebraTrace = window.AlgebraTrace || {};
         if (compact.indexOf("/") >= 0 && containsAny(compact, ["=", ">", "<"])) return containsAny(compact, [">", "<"]) ? "rational_inequality" : "rational_equation";
         if (compact.indexOf("/") >= 0) return "rational_expression";
         if (containsAny(compact, ["<=", ">=", "<", ">"])) return compact.indexOf("x^2") >= 0 ? "quadratic_inequality" : "linear_inequality";
+        if (compact.indexOf("=") >= 0 && hasParameter(text)) return compact.indexOf("x^2") >= 0 || compact.indexOf("x^(2)") >= 0 ? "parameterized_quadratic_equation" : "parameterized_linear_equation";
         if (compact.indexOf("=") >= 0) return compact.indexOf("x^2") >= 0 ? "quadratic_equation" : "linear_equation";
         if (/^[0-9+\-*/^().\s]+$/.test(text)) return "arithmetic_expression";
         return "algebraic_expression";
@@ -44,6 +52,7 @@ window.AlgebraTrace = window.AlgebraTrace || {};
             has_exponential_functions: text.indexOf("^") >= 0,
             has_logarithms: containsAny(text.toLowerCase(), ["log", "ln("]),
             has_radicals: text.toLowerCase().indexOf("sqrt(") >= 0,
+            has_parameters: hasParameter(text),
             has_derivative_request: task === "derivative_request",
             has_integral_request: task === "integral_request",
             domain: "real"

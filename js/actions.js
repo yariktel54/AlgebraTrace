@@ -23,6 +23,12 @@ window.AlgebraTrace = window.AlgebraTrace || {};
     function hasRationalForm(text) { return compact(text).indexOf("/") >= 0; }
     function hasTrig(text) { return /\b(sin|cos|tan)\s*\(/i.test(text); }
     function hasLog(text) { return /\b(?:log\d*|log_|log\(|ln\()/i.test(text); }
+    function hasParameter(text) {
+        var s = trim(text).replace(/sin|cos|tan|cot|ctg|sec|csc|log|ln|sqrt|exp|limit|integrate|infinity|pi|dx|d\//ig, "");
+        var ids = s.match(/[A-Za-z]+/g) || [];
+        for (var i = 0; i < ids.length; i += 1) if (ids[i].toLowerCase() !== "x") return true;
+        return false;
+    }
     function isLikelyPolynomial(text) {
         var s = trim(text);
         if (!s || hasRelation(s) || hasSystemSeparator(s)) return false;
@@ -75,6 +81,7 @@ window.AlgebraTrace = window.AlgebraTrace || {};
         }
 
         if (hasRelation(text)) {
+            if (hasParameter(text)) actions.push("solve_with_parameters", "analyze_parameters");
             actions.push("solve");
             if (isGraphable(text)) actions.push("graph");
             return unique(actions);
@@ -119,6 +126,7 @@ window.AlgebraTrace = window.AlgebraTrace || {};
         if (isIntegralRequest(text)) return "integrate";
         if (isLimitRequest(text)) return s.indexOf("infinity") >= 0 || s.indexOf("->oo") >= 0 ? "find_limit_at_infinity" : "find_limit";
         if (hasSystemSeparator(text)) return hasInequality(text) ? "solve_inequality_system" : "solve_system";
+        if (hasRelation(text) && hasParameter(text)) return "solve_with_parameters";
         if (hasRelation(text)) return "solve";
         if (hasLog(text) && /x/i.test(text)) return "find_domain";
         if (hasRationalForm(text)) return "simplify";

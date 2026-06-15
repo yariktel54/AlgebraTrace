@@ -37,15 +37,18 @@ window.AlgebraTrace = window.AlgebraTrace || {};
     function renderPreview() {
         var host = $("mathPreview");
         if (!host) return;
+        var latex = state.editor && state.editor.getLatex ? state.editor.getLatex().trim() : "";
         var text = getInputValue().trim();
-        if (!text) {
-            host.innerHTML = '<span class="preview-empty">The formatted expression is editable in the input field above.</span>';
+        if (!latex && !text) {
+            host.innerHTML = '<span class="preview-empty">LaTeX source and solver export are synchronized from the editor.</span>';
             return;
         }
         try {
-            host.innerHTML = NS.renderMath ? NS.renderMath(text) : escapeHTML(text);
+            host.innerHTML = (NS.renderLatex && latex ? NS.renderLatex(latex) : (NS.renderMath ? NS.renderMath(text) : escapeHTML(text))) +
+                '<div class="latex-source"><span>LaTeX</span><code>' + escapeHTML(latex || (NS.mathToLatex ? NS.mathToLatex(text) : text)) + '</code></div>' +
+                '<div class="latex-source"><span>Solver text</span><code>' + escapeHTML(text) + '</code></div>';
         } catch (e) {
-            host.textContent = text;
+            host.textContent = latex || text;
         }
     }
 
@@ -240,13 +243,17 @@ window.AlgebraTrace = window.AlgebraTrace || {};
         if (!host || !NS.createMathEditor) return;
         state.editor = NS.createMathEditor(host, {
             input:"inputText",
-            placeholder:isDevMode() ? "Enter an expression or equation" : "Enter a math expression or equation",
+            placeholder:isDevMode() ? "Enter LaTeX or use the math keyboard" : "Enter math in LaTeX",
             onChange:function () {
                 renderPreview();
                 showMessage("");
             },
             onEnter:function () { processInput(); }
         });
+        NS.__activeMathEditor = state.editor;
+        window.getMathEditorValue = function () { return state.editor ? state.editor.getValue() : ""; };
+        window.setMathEditorValue = function (text) { if (state.editor) state.editor.setValue(text); };
+        window.insertIntoMathEditor = function (text, offset) { if (state.editor) state.editor.insertText(text, offset); };
     }
 
     function initInitialState() {
